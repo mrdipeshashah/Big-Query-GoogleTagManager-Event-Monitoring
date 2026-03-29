@@ -2,23 +2,30 @@ WITH base_events AS (
   SELECT
     PARSE_DATE('%Y%m%d', event_date) AS date,
     event_name,
-    -- Extracting Transaction ID and Value
+    -- 1. Extracting Transaction ID
     (SELECT value.string_value FROM UNNEST(event_params) WHERE key = 'transaction_id') AS transaction_id,
-    (SELECT value.double_value FROM UNNEST(event_params) WHERE key = 'value') AS revenue_value
+    
+    -- 2. Extracting Revenue (Checking double, then int, then string)
+    COALESCE(
+      (SELECT value.double_value FROM UNNEST(event_params) WHERE key = 'value'),
+      CAST((SELECT value.int_value FROM UNNEST(event_params) WHERE key = 'value') AS FLOAT64),
+      SAFE_CAST((SELECT value.string_value FROM UNNEST(event_params) WHERE key = 'value') AS FLOAT64)
+    ) AS revenue_value
+    
   FROM `enter.tablename_123456.events_*`
-  WHERE _TABLE_SUFFIX BETWEEN '20260101' AND '20260331'
+  WHERE _TABLE_SUFFIX BETWEEN '20250101' AND '20260331'
     AND event_name = 'purchase'
 )
 
 SELECT 
   date,
   transaction_id,
-  -- Logic for the scorecard
+  -- Health logic
   IF(transaction_id IS NOT NULL AND transaction_id != '(not set)', 1, 0) AS is_id_populated,
   1 AS is_purchase,
-  -- Revenue metric
+  -- Summing the recovered revenue
   SUM(IFNULL(revenue_value, 0)) AS total_revenue,
-  -- Volume metric (Now 1 Row = 1 Purchase)
+  -- Volume metric
   COUNT(*) AS purchase_count
 FROM base_events
 GROUP BY 1, 2, 3, 4
