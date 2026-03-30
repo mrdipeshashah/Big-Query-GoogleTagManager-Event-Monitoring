@@ -2,7 +2,7 @@ This repository contains Big Query code using Google Analytics raw data tracking
 
 (I use event & trigger interchangeably - The best set-up are when the event name + trigger are the same, i.e. event name = purchase, trigger = purchase)
 
-If Google Analytics stop tracking e-commerce sales it means the purchase event/trigger has failed meaning it would also fail for Google Ads, Meta etc.  
+If Google Analytics stops tracking e-commerce sales it means the purchase event/trigger has failed meaning it would also fail for Google Ads, Meta etc. It also means if there are 100 purchase events reported on a given day it means Google Ads, Meta etc cannot be reporting more than 100 purchase events. 
 
 I have developed a looker studio dashboard (https://lookerstudio.google.com/reporting/b3d4ac15-0583-4b5a-a083-32bdbd41d6ca) that brings the insights to life. 
 
@@ -15,9 +15,15 @@ The steps required:
 
 Watch-Outs: 
 
-1. To be able to monitor the performance of Google Analytics tags the most important is the architecture of each tag that is shared in the GitHub GTM link provided above. Each GA-GTM event tag requires adding the following event parameters: tag_name, tag_catgeory and tag_date_creation. These are additional info that will be available in Big Query for each event/tag. To be able to monitor the performance correctly having these event parameters correclty inputted will provide far greater insights
-2. The Event Variable Settings shared in the GitHub GTM link provided above should be a default for every GA4 event tag in Google Tag Manager. The Event Variable Settings has the following event parameters: container_id, container_version and timestamp, container_id + container_version are coming from built-in variables where timestamp is coming from a user defined variable which can be found in the GitHub GTM container. These provide addtional rich information in Big Query for each event.tag. Once the Event Variable Settings are set it should not be changed unless addtional event parameters are being added  
-3. The one addition the dashboard will need is adding in Health Status in the audit log table + the scorecards under unhealthy tags, Add Field > Add Calculated Field > Label Health Status > Copy the below and change the tag name and requirements
+1. It's important to have the right architecture setup. The above shared GitHub GTM link helps with the architecture which needs to be supported by a data layer architecture   
+2. The Big Query code - purchase-event-tracking is used on the 7 day and yesterday scorecards + transaction ID health table 
+3. The Big Query code - all-events-tracking is used on the event health trend chart + purchase event health v baseline + event volume by journey stage + event audit log
+4. The Trans ID Fill in the scorecard is SUM(is_id_populated)/SUM(is_purchase) and it needs to be using - purchase-event-tracking 
+5. The Trans ID Status which is the dropdown for the Trans ID Health table using the below following which is created as a calculated file in purchase-event-tracking. Add Field > Add Calcularted Field 
 
+  CASE 
+  WHEN is_id_populated = 1 THEN "✅ ID Populated" 
+  ELSE "❌ Missing ID (Red Rows)" 
+  END
 
   
