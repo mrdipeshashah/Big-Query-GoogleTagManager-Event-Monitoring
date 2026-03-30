@@ -1,4 +1,4 @@
-This repository contains Big Query code using Google Analytics raw data tracking the health of events via Google Tag Manager. Tags are critical in the GTM set-up but the common domoino for all platforms is the event/trigger which is used by Google Ads, Meta, Google Analytics etc. The focus is on event performance that can be diagnosed by any of the different teams working with the different platforms. 
+This repository contains Big Query code using Google Analytics raw data tracking the health of events via Google Tag Manager. Tags are critical in the GTM set-up but the common domoino for all platforms is the event/trigger which is used by Google Ads, Meta, Google Analytics etc. The focus is on event performance that any of the different teams working with the different platforms would want assurance on the health of the events.  
 
 (I use event & trigger interchangeably - The best set-up are when the event name + trigger are the same, i.e. event name = purchase, trigger = purchase)
 
