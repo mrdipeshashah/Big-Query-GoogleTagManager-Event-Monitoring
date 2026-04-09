@@ -1,3 +1,5 @@
+# OVERVIEW
+
 This repository contains Big Query code using Google Analytics raw data tracking the health of events via Google Tag Manager. Tags are critical in the GTM set-up but the common domoino for all platforms is the event/trigger which is used by Google Ads, Meta, Google Analytics etc. The focus is on event performance that any of the different teams working with the different platforms would want assurance on the health of the events.  
 
 (I use event & trigger interchangeably - The best set-up are when the event name + trigger are the same, i.e. event name = purchase, trigger = purchase)
@@ -6,12 +8,16 @@ If Google Analytics stops tracking e-commerce sales it means the purchase event/
 
 I have developed a looker studio dashboard (https://lookerstudio.google.com/reporting/b3d4ac15-0583-4b5a-a083-32bdbd41d6ca) that brings the insights to life. 
 
+# THE SET-UP
+
 The steps required:
 
 1. To be able to generate the data to build the dashboard it requires implementing this GTM container > https://github.com/GTMRecipeContainers/Google-Analytics-4-Enhanced-E-commerce it will require configuring the triggers + GA4 event tag that works best for the website
 2. Google Analytics is connected to Big Query
 3. The 2 Big Query code provided, create and save the views in Big Query
 4. Make a copy of the looker studio dashboard and connect it to the saved views
+
+# THE WATCH-OUTS
 
 Watch-Outs: 
 
